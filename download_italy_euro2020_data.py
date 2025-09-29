@@ -28,7 +28,6 @@ def download(url, out_path):
         out_path.write_text(text, encoding="utf-8")
         return True
     except Exception as e:      #avoids crash if 360 data is missing
-        print(f"[WARN] Could not fetch {url} -> {e}")
         return False
 
 
