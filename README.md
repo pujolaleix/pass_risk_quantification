@@ -11,4 +11,5 @@ Pass quality assessment for champion Italy national team in Euro 2020 competitio
 
 ## Data Sources
 This project uses data provided by [StatsBomb](https://statsbomb.com).
+
 Please refer to their [Open Data License](https://github.com/statsbomb/open-data/blob/master/LICENSE.md) for terms. 
