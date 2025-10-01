@@ -10,15 +10,7 @@ out_dir.mkdir(parents=True, exist_ok=True)
 
 competition_id = 55
 season_id = 43
-match_ids = [
-    3788741,  # Group stage: Italy vs Turkey
-    3788754,  # Group stage: Italy vs Switzerland
-    3788766,  # Group stage: Italy vs Wales
-    3794679,  # Round of 16: Italy vs Austria
-    3794686,  # Quarterfinal: Italy vs Belgium
-    3795220,  # Semifinal: Italy vs Spain
-    3795506,  # Final: Italy vs England
-]
+match_ids = [3788741, 3788754, 3788766, 3794685, 3795107, 3795220, 3795506]
 
 # aux function to download files related to particular ids
 def download(url, out_path):
