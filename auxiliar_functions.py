@@ -110,7 +110,7 @@ def pressure_metrics(df: pd.DataFrame, pressure_thr: float, bypass_margin_thr: f
     ey = float(df["ey"].iloc[0])
 
     # opponents only
-    opponents = df.loc[df["teammate"] == False, ["x", "y"]].dropna()
+    opponents = df.loc[df["teammate"]==False, ["x", "y"]].dropna()
 
     if opponents.empty:
         return pd.Series({
@@ -124,8 +124,8 @@ def pressure_metrics(df: pd.DataFrame, pressure_thr: float, bypass_margin_thr: f
     ox = opponents["x"].to_numpy()
     oy = opponents["y"].to_numpy()
 
-    d_passer   = np.hypot(ox - sx, oy - sy)
-    d_receiver = np.hypot(ox - ex, oy - ey)
+    d_passer   = np.hypot(ox - sx, oy - sy)         # distances between pass start position and in-frame opponents
+    d_receiver = np.hypot(ox - ex, oy - ey)         # distances between pass end position and in-frame opponents
 
     #bypassed opponents logic
     vx = ex - sx
@@ -133,8 +133,8 @@ def pressure_metrics(df: pd.DataFrame, pressure_thr: float, bypass_margin_thr: f
     denom = vx*vx + vy*vy
     t = ((ox-sx)*vx + (oy-sy)*vy) / denom
     on_seg = (t>0.0) & (t<1.0)
-    projx = sx + t * vx
-    projy = sy + t * vy
+    projx = sx + t*vx
+    projy = sy + t*vy
     perp = np.hypot(ox - projx, oy - projy)
     bypassed_opp = int((on_seg & (perp<=bypass_margin_thr)).sum())
     if denom <= 1e-9:
