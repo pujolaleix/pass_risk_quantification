@@ -1,6 +1,9 @@
 # Pass Risk Quantification Metric
 Pass quality assessment for champion Italy national team in Euro 2020 competition.
-<img src="euro2020_final_pass_animation.gif" width="500" alt="Pass risk animation">
+<p align="center">
+  <img src="euro2020_final_pass_animation.gif" width="500" alt="Pass risk animation">
+</p>
+
 
 
 
