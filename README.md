@@ -1,5 +1,17 @@
 # Pass Risk Quantification Metric
-This works processes and analyses StatsBomb data to create a metric that quantifies pass risk. Results are displayed using Italy national team matches in Euro2020 competition, where they achieved their second UEFA EURO title.
+This works processes and analyses StatsBomb data to create a metric that quantifies pass risk. Information from ``events.json``, ``lineups.json`` and ``three-sixty.json`` StatsBomb files is extracted, processed and transformed to build metrics to create **Pass Risk Measure**. Metrics considered are *length*, *passer_preassure*, *passer_pressure_distance*, *receiver_pressure*, *receiver_pressure_distance*, and *bypassed_opponents* which are normalized and combined with user-configurated weighting to compute risk metric. As a starting point, I have used the following configuration:
+
+Weighted sum (weights sum to 1):
+   risk_i =
+     0.3 * s_{i,length} +
+     0.1 * s_{i,passer_pressure} +
+     0.1 * s_{i,passer_pressure_dist} +
+     0.1 * s_{i,receiver_pressure} +
+     0.1 * s_{i,receiver_pressure_dist} +
+     0.3 * s_{i,bypassed_opponents}
+
+Results are displayed using Italy national team matches in Euro2020 competition, where they achieved their second UEFA EURO title. Below visual represent the pass location and risk quantification of each pass in the final Euro2020 match between Italy (in blue) and England (in white). Completed passes are represented with green arrows, whereas missed/intercepted are displayed in red.
+
 <p align="center">
   <img src="euro2020_final_pass_animation.gif" width="500" alt="Pass risk animation">
 </p>
