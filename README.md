@@ -12,7 +12,7 @@ This works processes and analyses StatsBomb data to create a metric that quantif
   Files are saved under `data/italy_euro2020` directory, maintaining original StatsBomb repository structure.
 
 - **auxiliar_functions.py**
-  Contains functions necessary to preprocess and transform data, perform feature engineering, and visualize results. They are separated from the `main` file for a better readability.
+  Contains functions necessary to preprocess and transform data, perform feature engineering, and visualize results. They are separated from the main `pass_risk.ipynb` file for a better readability.
 
 - **pass_risk.ipynb**
   This is the main file that contains end-to-end pipeline to create and visualize pass risk quantification.
