@@ -82,8 +82,7 @@ def pass_features_from_events(events_json, features) -> pd.DataFrame:
     df = df[df["type.name"] == "Pass"].copy()
 
     #feature engineering
-    df["time"] = df["minute"].astype(int).astype(str).str.zfill(2) + ":" + \
-                 df["second"].astype(int).astype(str).str.zfill(2)
+    df["time"] = df["minute"].astype(int).astype(str).str.zfill(2) + ":" + df["second"].astype(int).astype(str).str.zfill(2)
     df["team"]   = df["team.name"]
     df["player_name"] = df["player.name"]
     df["recipient"] = df["pass.recipient.name"]
@@ -96,7 +95,7 @@ def pass_features_from_events(events_json, features) -> pd.DataFrame:
     df["dx"] = df["ex"] - df["sx"]
     df["dy"] = df["ey"] - df["sy"]
     df["length"] = np.hypot(df["dx"], df["dy"])
-    df["angle"]  = np.arctan2(df["dy"], df["dx"])  # radians
+    df["angle"]  = np.arctan2(df["dy"], df["dx"])
     df["direction"] = np.where(df["dx"] > 10, "forward", np.where(df["dx"] < -10, "backward", "lateral"))
     df["is_progressive"] = df["dx"] > 20
     df["height"] = df["pass.height.name"].fillna("Unknown")
