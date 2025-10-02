@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import math
 import matplotlib.patheffects as pe
 
 # -------------------------------------
@@ -25,11 +26,11 @@ def count_freeze_frames(id: int, data_dir: Path) -> int:
 # ----- Data Engineering functions -----
 # --------------------------------------
 
-def load_events(id: int, data_dir):
+def load_events(id: int, data_dir: Path):
     p = data_dir/"events"/f"{id}.json"
     return json.loads(p.read_text(encoding="utf-8"))
 
-def load_lineups(id: int, data_dir):
+def load_lineups(id: int, data_dir: Path):
     p = data_dir/"lineups"/f"{id}.json"
     lineup_json = json.loads(p.read_text(encoding="utf-8"))
     
@@ -44,6 +45,24 @@ def load_lineups(id: int, data_dir):
                 "jersey_number": pl["jersey_number"],
             })
     return pd.DataFrame(players)
+
+
+def load_360(id: int, data_dir: Path):
+    p = data_dir/"three-sixty"/f"{id}.json"
+    frames_json = json.loads(p.read_text(encoding="utf-8"))
+
+    rows = []
+    for fr in frames_json:
+        ei = fr.get("event_uuid")
+        for pl in fr.get("freeze_frame", []) or []:
+            loc = pl.get("location",[None,None])
+            rows.append({
+                "event_index": ei,
+                "teammate": bool(pl.get("teammate", False)),
+                "x": loc[0], "y": loc[1]
+            })
+    return pd.DataFrame(rows)
+
 
 
 def third_x(x):
@@ -84,6 +103,50 @@ def pass_features_from_events(events_json, features) -> pd.DataFrame:
     return df[features]
 
 
+def pressure_metrics(df: pd.DataFrame, pressure_thr: float, bypass_margin_thr: float):
+    sx = float(df["sx"].iloc[0])
+    sy = float(df["sy"].iloc[0])
+    ex = float(df["ex"].iloc[0])
+    ey = float(df["ey"].iloc[0])
+
+    # opponents only
+    opponents = df.loc[df["teammate"] == False, ["x", "y"]].dropna()
+
+    if opponents.empty:
+        return pd.Series({
+            "passer_pressure": 0,
+            "passer_pressure_dist": np.nan,
+            "receiver_pressure": 0,
+            "receiver_pressure_dist": np.nan,
+            "bypassed_opponents": 0,
+        })
+
+    ox = opponents["x"].to_numpy()
+    oy = opponents["y"].to_numpy()
+
+    d_passer   = np.hypot(ox - sx, oy - sy)
+    d_receiver = np.hypot(ox - ex, oy - ey)
+
+    #bypassed opponents logic
+    vx = ex - sx
+    vy = ey - sy
+    denom = vx*vx + vy*vy
+    t = ((ox-sx)*vx + (oy-sy)*vy) / denom
+    on_seg = (t>0.0) & (t<1.0)
+    projx = sx + t * vx
+    projy = sy + t * vy
+    perp = np.hypot(ox - projx, oy - projy)
+    bypassed_opp = int((on_seg & (perp<=bypass_margin_thr)).sum())
+    if denom <= 1e-9:
+        bypassed_opp = 0
+
+    return pd.Series({
+        "passer_pressure": int((d_passer<=pressure_thr).sum()),
+        "passer_pressure_dist": float(d_passer.min()),
+        "receiver_pressure": int((d_receiver<=pressure_thr).sum()),
+        "receiver_pressure_dist": float(d_receiver.min()),
+        "bypassed_opponents": bypassed_opp
+    })
 
 
 # --------------------------------------
