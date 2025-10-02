@@ -18,8 +18,12 @@ Results are displayed using Italy national team matches in Euro2020 competition,
   Contains functions necessary to preprocess and transform data, perform feature engineering, and visualize results. They are separated from the main `pass_risk.ipynb` file for a better readability.
 
 - **pass_risk.ipynb**
-  This is the main file that contains end-to-end pipeline to create and visualize pass risk quantification.
-  
+  This is the main file that contains end-to-end pipeline to create and visualize pass risk measure. It includes also additional static visuals to display any desired metric per field zone average, as observable in the below representation. A copy of produced dataframe is saves as `euro2020_final_pass_events.csv`.
+
+<p align="center">
+  <img src="per_zone_visuals/per_zone_risk_measure_5x4.png" width="500" alt="Pass risk animation">
+</p>
+
 
 
 ## Data Sources
